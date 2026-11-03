@@ -3,289 +3,346 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>SpearTier — Spear PvP Rankings</title>
+<title>SpearTier — Minecraft Spear PvP Tier List</title>
 <style>
   :root{
-    --bg:#070b14;
-    --panel:#0d1424;
-    --panel-border:#1b2740;
-    --text:#e7ecf7;
-    --muted:#8793ab;
-    --accent:#4fd1ff;
-    --accent2:#5b9dff;
-    --green:#1f9d55;
-    --green-bg:#0f2a1c;
+    --bg:#0a0a0c;
+    --panel:#141417;
+    --panel2:#1b1b20;
+    --border:#2a2a30;
+    --text:#f2f2f4;
+    --muted:#9a9aa3;
+    --accent:#ff3b3b;
+    --accent-dim:#3a1414;
   }
   *{box-sizing:border-box;}
   body{
     margin:0;
-    background:radial-gradient(circle at top, #0b1222 0%, #070b14 60%);
+    background:var(--bg);
     color:var(--text);
-    font-family:"Segoe UI", Roboto, Arial, sans-serif;
+    font-family:"Inter","Segoe UI",Roboto,Arial,sans-serif;
+    padding-bottom:70px; /* room for bottom tab bar on mobile */
   }
+  a{color:inherit;text-decoration:none;}
+
+  /* ---------- Header ---------- */
   header{
+    position:sticky;
+    top:0;
+    z-index:40;
     display:flex;
+    align-items:center;
     justify-content:space-between;
-    align-items:center;
-    padding:18px 40px;
-    border-bottom:1px solid var(--panel-border);
+    padding:14px 32px;
+    background:rgba(10,10,12,0.85);
+    backdrop-filter:blur(10px);
+    border-bottom:1px solid var(--border);
   }
-  .logo{
-    display:flex;
-    align-items:center;
-    gap:10px;
-    font-weight:800;
-    font-size:20px;
-    letter-spacing:0.5px;
-  }
+  .logo{display:flex;align-items:center;gap:10px;font-weight:800;font-size:18px;}
   .logo-icon{
-    width:34px;height:34px;border-radius:9px;
-    background:linear-gradient(135deg,var(--accent2),var(--accent));
-    display:flex;align-items:center;justify-content:center;
-    font-weight:900;color:#06101f;
+    width:32px;height:32px;border-radius:8px;
+    background:linear-gradient(135deg,var(--accent),#ff7a3b);
+    display:flex;align-items:center;justify-content:center;font-size:16px;
   }
-  .logo span.tier{color:var(--accent);}
-  .nav-buttons{display:flex;gap:10px;}
+  .header-right{display:flex;align-items:center;gap:14px;}
+  .search-hint{
+    display:flex;align-items:center;gap:8px;
+    background:var(--panel);
+    border:1px solid var(--border);
+    padding:8px 12px;
+    border-radius:8px;
+    color:var(--muted);
+    font-size:13px;
+  }
+  .search-hint kbd{
+    background:var(--panel2);
+    border:1px solid var(--border);
+    border-radius:4px;
+    padding:1px 6px;
+    font-size:11px;
+  }
+  .online-count{
+    display:flex;align-items:center;gap:6px;
+    font-size:13px;color:var(--muted);
+  }
+  .online-dot{width:8px;height:8px;border-radius:50%;background:#3bd671;box-shadow:0 0 8px #3bd671;}
+  .nav-buttons{display:flex;gap:8px;}
   .nav-buttons button{
-    background:#111a2d;
-    border:1px solid var(--panel-border);
+    background:var(--panel);
+    border:1px solid var(--border);
     color:var(--text);
-    padding:9px 16px;
+    padding:8px 14px;
     border-radius:8px;
     cursor:pointer;
-    font-size:14px;
+    font-size:13px;
+    font-weight:600;
   }
-  .nav-buttons button:hover{border-color:var(--accent2);}
+  .nav-buttons button:hover{border-color:var(--accent);}
 
+  /* ---------- Hero ---------- */
   .hero{
     text-align:center;
-    padding:60px 20px 40px;
-  }
-  .hero .eyebrow{
-    color:var(--accent);
-    font-weight:700;
-    letter-spacing:2px;
-    font-size:13px;
-    margin-bottom:14px;
-  }
-  .hero h1{
-    font-size:56px;
-    margin:0 0 16px;
-    background:linear-gradient(90deg,#ffffff,#bcd9ff);
-    -webkit-background-clip:text;
-    background-clip:text;
-    color:transparent;
-  }
-  .hero p{
-    color:var(--muted);
-    max-width:560px;
+    padding:80px 20px 50px;
+    max-width:720px;
     margin:0 auto;
-    font-size:15px;
-    line-height:1.5;
   }
-
-  .stats{
-    display:flex;
-    gap:20px;
-    justify-content:center;
-    padding:30px 40px;
-    flex-wrap:wrap;
-  }
-  .stat-card{
-    background:var(--panel);
-    border:1px solid var(--panel-border);
-    border-radius:12px;
-    padding:20px 40px;
-    text-align:center;
-    min-width:180px;
-  }
-  .stat-card .num{font-size:30px;font-weight:800;}
-  .stat-card .label{color:var(--muted);font-size:12px;letter-spacing:1px;margin-top:6px;}
-
-  .main-panel{
-    max-width:1100px;
-    margin:0 auto 60px;
-    background:var(--panel);
-    border:1px solid var(--panel-border);
-    border-radius:14px;
-    padding:28px 30px;
-  }
-  .main-panel-header{
-    display:flex;
-    justify-content:space-between;
-    align-items:flex-start;
-    margin-bottom:20px;
-    flex-wrap:wrap;
-    gap:10px;
-  }
-  .main-panel-header h2{margin:0 0 4px;font-size:22px;}
-  .main-panel-header p{margin:0;color:var(--muted);font-size:13px;}
-  .badge{
-    background:var(--green-bg);
-    color:#4ade80;
-    border:1px solid #1f6b3e;
+  .hero .tag{
+    display:inline-block;
+    color:var(--accent);
+    background:var(--accent-dim);
+    border:1px solid #5a2222;
+    font-weight:700;
+    letter-spacing:1px;
+    font-size:12px;
     padding:5px 14px;
     border-radius:20px;
-    font-size:12px;
+    margin-bottom:20px;
+  }
+  .hero h1{
+    font-size:48px;
+    line-height:1.1;
+    margin:0 0 16px;
+    font-weight:800;
+  }
+  .hero h1 span{color:var(--accent);}
+  .hero p{color:var(--muted);font-size:15px;line-height:1.6;margin:0 0 28px;}
+  .hero-buttons{display:flex;gap:12px;justify-content:center;flex-wrap:wrap;}
+  .btn{
+    padding:13px 26px;
+    border-radius:10px;
     font-weight:700;
-    height:fit-content;
-  }
-  .badge.admin{
-    background:#2a1a0f;
-    color:#ffb454;
-    border-color:#6b4a1f;
-  }
-
-  .controls{
-    display:flex;
-    gap:12px;
-    margin-bottom:18px;
-    flex-wrap:wrap;
-  }
-  .controls input[type="text"]{
-    flex:1;
-    min-width:200px;
-    background:#0a1120;
-    border:1px solid var(--panel-border);
-    color:var(--text);
-    padding:11px 14px;
-    border-radius:8px;
     font-size:14px;
-  }
-  .controls select{
-    background:#0a1120;
-    border:1px solid var(--panel-border);
-    color:var(--text);
-    padding:11px 14px;
-    border-radius:8px;
-    font-size:14px;
-  }
-
-  table{width:100%;border-collapse:collapse;}
-  thead th{
-    text-align:left;
-    color:var(--muted);
-    font-size:12px;
-    letter-spacing:1px;
-    padding:10px 12px;
-    border-bottom:1px solid var(--panel-border);
-  }
-  tbody td{
-    padding:14px 12px;
-    border-bottom:1px solid #121b30;
-    font-size:14px;
-  }
-  tbody tr:hover{background:#0b1426;}
-  .tier-pill{
-    background:#132544;
-    border:1px solid #2a4a7a;
-    color:var(--accent2);
-    padding:4px 12px;
-    border-radius:6px;
-    font-size:12px;
-    font-weight:700;
-  }
-  .admin-actions button{
-    background:none;
-    border:1px solid var(--panel-border);
-    color:var(--muted);
-    border-radius:6px;
-    padding:5px 10px;
     cursor:pointer;
-    font-size:12px;
-    margin-right:6px;
+    border:1px solid var(--border);
   }
-  .admin-actions button:hover{color:var(--text);border-color:var(--accent2);}
+  .btn-primary{background:var(--accent);color:#fff;border:none;}
+  .btn-primary:hover{background:#e22e2e;}
+  .btn-secondary{background:var(--panel);color:var(--text);}
+  .btn-secondary:hover{border-color:var(--accent);}
+
+  /* ---------- Discord banner ---------- */
+  .discord-banner{max-width:1000px;margin:0 auto 50px;padding:0 20px;}
+  .discord-inner{
+    display:flex;align-items:center;justify-content:space-between;gap:16px;flex-wrap:wrap;
+    background:linear-gradient(135deg,#1b1040,#241a55);
+    border:1px solid #4a3a9c;
+    border-radius:14px;
+    padding:18px 26px;
+  }
+  .discord-left{display:flex;align-items:center;gap:14px;}
+  .discord-icon{
+    width:40px;height:40px;border-radius:10px;background:#5865F2;
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .discord-icon svg{width:22px;height:22px;fill:#fff;}
+  .discord-text strong{display:block;font-size:14px;}
+  .discord-text span{color:#b9b4e8;font-size:12px;}
+  .discord-join{
+    background:#5865F2;color:#fff;font-weight:700;font-size:13px;
+    padding:10px 18px;border-radius:9px;white-space:nowrap;
+  }
+  .discord-join:hover{background:#4752c4;}
+
+  /* ---------- Section shells ---------- */
+  .section{max-width:1000px;margin:0 auto 60px;padding:0 20px;}
+  .section-head{margin-bottom:22px;}
+  .section-head .eyebrow{color:var(--accent);font-size:12px;font-weight:700;letter-spacing:1px;margin-bottom:6px;}
+  .section-head h2{margin:0 0 6px;font-size:26px;}
+  .section-head p{margin:0;color:var(--muted);font-size:13px;}
+
+  /* ---------- Leaderboard ---------- */
+  .board{
+    background:var(--panel);
+    border:1px solid var(--border);
+    border-radius:14px;
+    overflow:hidden;
+  }
+  .board-controls{
+    display:flex;gap:10px;padding:16px;flex-wrap:wrap;
+    border-bottom:1px solid var(--border);
+    align-items:center;
+    justify-content:space-between;
+  }
+  .board-controls-left{display:flex;gap:10px;flex-wrap:wrap;flex:1;}
+  .board-controls input[type="text"]{
+    flex:1;min-width:180px;background:var(--panel2);border:1px solid var(--border);
+    color:var(--text);padding:10px 12px;border-radius:8px;font-size:13px;
+  }
+  .board-controls select{
+    background:var(--panel2);border:1px solid var(--border);color:var(--text);
+    padding:10px 12px;border-radius:8px;font-size:13px;
+  }
+  .view-badge{
+    background:var(--accent-dim);color:#ff8a8a;border:1px solid #5a2222;
+    padding:5px 12px;border-radius:20px;font-size:11px;font-weight:700;white-space:nowrap;
+  }
+  .view-badge.admin{background:#3a2a0f;color:#ffb454;border-color:#6b4a1f;}
+
+  .legend{display:flex;gap:6px;flex-wrap:wrap;padding:14px 16px;border-bottom:1px solid var(--border);}
+  .legend-pill{
+    font-size:11px;font-weight:700;padding:4px 10px;border-radius:20px;
+    border:1px solid var(--border);color:var(--muted);cursor:pointer;user-select:none;
+  }
+  .legend-pill.active{border-color:var(--accent);color:var(--accent);background:var(--accent-dim);}
 
   .admin-add{
-    display:none;
-    gap:10px;
-    margin-bottom:18px;
-    flex-wrap:wrap;
-    background:#0a1120;
-    padding:16px;
-    border-radius:10px;
-    border:1px solid var(--panel-border);
+    display:none;gap:10px;flex-wrap:wrap;padding:16px;
+    border-bottom:1px solid var(--border);background:#0e0e11;
   }
   .admin-add input, .admin-add select{
-    background:#111a2d;
-    border:1px solid var(--panel-border);
-    color:var(--text);
-    padding:9px 12px;
-    border-radius:8px;
-    font-size:13px;
+    background:var(--panel2);border:1px solid var(--border);color:var(--text);
+    padding:9px 12px;border-radius:8px;font-size:13px;
   }
   .admin-add button{
-    background:linear-gradient(135deg,var(--accent2),var(--accent));
-    border:none;
-    color:#06101f;
-    font-weight:700;
-    padding:9px 18px;
-    border-radius:8px;
-    cursor:pointer;
+    background:var(--accent);border:none;color:#fff;font-weight:700;
+    padding:9px 18px;border-radius:8px;cursor:pointer;
   }
 
+  .board-row{
+    display:flex;align-items:center;gap:14px;
+    padding:14px 18px;
+    border-bottom:1px solid var(--border);
+  }
+  .board-row:last-child{border-bottom:none;}
+  .board-row:hover{background:var(--panel2);}
+  .row-rank{
+    width:28px;text-align:center;font-weight:800;color:var(--muted);font-size:14px;flex-shrink:0;
+  }
+  .row-rank.r1{color:#ffd56b;}
+  .row-rank.r2{color:#cfd8e6;}
+  .row-rank.r3{color:#d79a63;}
+  .avatar{
+    width:36px;height:36px;border-radius:8px;flex-shrink:0;
+    background:linear-gradient(135deg,#333,#1a1a1d);
+    display:flex;align-items:center;justify-content:center;
+    font-weight:800;font-size:14px;color:var(--muted);
+    border:1px solid var(--border);
+  }
+  .row-name{flex:1;min-width:0;}
+  .row-name strong{display:block;font-size:14px;}
+  .row-name span{font-size:11px;color:var(--muted);}
+  .row-tier{
+    background:var(--panel2);border:1px solid var(--border);
+    color:var(--text);font-weight:800;font-size:12px;
+    padding:5px 12px;border-radius:6px;min-width:46px;text-align:center;
+  }
+  .row-tier.t1{border-color:#ffd56b;color:#ffd56b;}
+  .row-tier.t2{border-color:#cfd8e6;color:#cfd8e6;}
+  .row-tier.t3{border-color:#d79a63;color:#d79a63;}
+  .row-region{
+    font-size:11px;color:var(--muted);background:var(--panel2);
+    border:1px solid var(--border);padding:4px 9px;border-radius:6px;min-width:34px;text-align:center;
+  }
+  .row-date{font-size:12px;color:var(--muted);min-width:80px;text-align:right;}
+  .row-admin button{
+    background:none;border:1px solid var(--border);color:var(--muted);
+    border-radius:6px;padding:5px 10px;cursor:pointer;font-size:11px;
+  }
+  .row-admin button:hover{color:var(--text);border-color:var(--accent);}
+  .board-empty{padding:40px 20px;text-align:center;color:var(--muted);font-size:13px;}
+  .pending-note{
+    margin:16px;font-size:12px;color:var(--muted);
+    background:var(--panel2);border:1px dashed var(--border);
+    border-radius:8px;padding:12px 14px;
+  }
+
+  /* ---------- Stat cards ---------- */
+  .stats-grid{display:grid;grid-template-columns:repeat(3,1fr);gap:16px;}
+  .stat-card{
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;
+    padding:20px;text-align:center;
+  }
+  .stat-card .num{font-size:28px;font-weight:800;}
+  .stat-card .label{color:var(--muted);font-size:11px;letter-spacing:1px;margin-top:4px;}
+
+  /* ---------- Tiers / points reference ---------- */
+  .tier-ref{display:flex;flex-direction:column;gap:10px;}
+  .tier-ref-row{
+    display:flex;align-items:center;gap:16px;
+    background:var(--panel);border:1px solid var(--border);
+    border-radius:10px;padding:14px 18px;flex-wrap:wrap;
+  }
+  .tier-ref-name{font-weight:800;font-size:14px;min-width:70px;}
+  .tier-ref-pills{display:flex;gap:8px;flex-wrap:wrap;}
+  .tier-ref-pill{
+    background:var(--panel2);border:1px solid var(--border);
+    font-size:12px;font-weight:700;padding:5px 10px;border-radius:6px;
+  }
+  .tier-ref-pill small{color:var(--muted);font-weight:500;margin-left:4px;}
+
+  /* ---------- Steps ---------- */
+  .steps{display:flex;flex-direction:column;gap:14px;}
+  .step{
+    display:flex;gap:16px;align-items:flex-start;
+    background:var(--panel);border:1px solid var(--border);border-radius:12px;padding:16px 18px;
+  }
+  .step-num{
+    font-size:22px;font-weight:800;color:var(--accent);min-width:34px;
+  }
+  .step-body strong{display:block;font-size:14px;margin-bottom:3px;}
+  .step-body span{font-size:13px;color:var(--muted);}
+
+  /* ---------- Footer ---------- */
   footer{
+    border-top:1px solid var(--border);
+    padding:40px 20px 30px;
     text-align:center;
-    padding:30px;
     color:var(--muted);
     font-size:12px;
-    letter-spacing:1px;
-    border-top:1px solid var(--panel-border);
+  }
+  footer .logo{justify-content:center;margin-bottom:10px;}
+  footer .foot-links{display:flex;gap:18px;justify-content:center;margin:14px 0;flex-wrap:wrap;font-size:12px;}
+  footer .disclaimer{margin-top:14px;font-size:11px;opacity:0.6;}
+
+  /* ---------- Bottom tab bar (mobile) ---------- */
+  .tabbar{
+    display:none;
+    position:fixed;bottom:0;left:0;right:0;
+    background:rgba(10,10,12,0.95);
+    backdrop-filter:blur(10px);
+    border-top:1px solid var(--border);
+    z-index:40;
+    padding:8px 0;
+  }
+  .tabbar-inner{display:flex;justify-content:space-around;}
+  .tab-item{
+    display:flex;flex-direction:column;align-items:center;gap:3px;
+    color:var(--muted);font-size:10px;font-weight:600;
+  }
+  .tab-item.active{color:var(--accent);}
+  .tab-icon{font-size:18px;}
+
+  @media (max-width: 760px){
+    header{padding:12px 16px;}
+    .search-hint, .online-count{display:none;}
+    .hero{padding:50px 16px 30px;}
+    .hero h1{font-size:32px;}
+    .stats-grid{grid-template-columns:1fr;}
+    .tabbar{display:block;}
+    .row-date{display:none;}
   }
 
-  /* modal */
+  /* ---------- Modals ---------- */
   .overlay{
-    display:none;
-    position:fixed;inset:0;
-    background:rgba(4,8,16,0.75);
-    align-items:center;justify-content:center;
-    z-index:50;
+    display:none;position:fixed;inset:0;background:rgba(0,0,0,0.75);
+    align-items:center;justify-content:center;z-index:60;
   }
   .modal{
-    background:var(--panel);
-    border:1px solid var(--panel-border);
-    border-radius:14px;
-    padding:28px;
-    width:320px;
+    background:var(--panel);border:1px solid var(--border);border-radius:14px;
+    padding:28px;width:320px;
   }
   .modal h3{margin-top:0;}
   .modal input{
-    width:100%;
-    background:#0a1120;
-    border:1px solid var(--panel-border);
-    color:var(--text);
-    padding:11px 14px;
-    border-radius:8px;
-    font-size:14px;
-    margin:12px 0;
+    width:100%;background:var(--panel2);border:1px solid var(--border);color:var(--text);
+    padding:11px 14px;border-radius:8px;font-size:14px;margin:12px 0;
   }
   .modal-actions{display:flex;gap:10px;justify-content:flex-end;}
   .modal-actions button{
-    padding:9px 16px;
-    border-radius:8px;
-    border:1px solid var(--panel-border);
-    background:#111a2d;
-    color:var(--text);
-    cursor:pointer;
+    padding:9px 16px;border-radius:8px;border:1px solid var(--border);
+    background:var(--panel2);color:var(--text);cursor:pointer;
   }
-  .modal-actions button.primary{
-    background:linear-gradient(135deg,var(--accent2),var(--accent));
-    color:#06101f;
-    border:none;
-    font-weight:700;
-  }
+  .modal-actions button.primary{background:var(--accent);color:#fff;border:none;font-weight:700;}
   .modal .error{color:#ff6b6b;font-size:12px;min-height:16px;}
-
-  .pending-note{
-    margin-top:14px;
-    font-size:12px;
-    color:var(--muted);
-    background:#0a1120;
-    border:1px dashed var(--panel-border);
-    border-radius:8px;
-    padding:12px 14px;
-  }
 </style>
 </head>
 <body>
@@ -293,89 +350,141 @@
 <header>
   <div class="logo">
     <div class="logo-icon">⚔</div>
-    <div>SPEAR<span class="tier">TIER</span></div>
+    SpearTier
   </div>
-  <div class="nav-buttons">
-    <button id="memberBtn">Member Sign In</button>
-    <button id="adminBtn">Admin Sign In</button>
+  <div class="header-right">
+    <div class="search-hint">Search players <kbd>/</kbd></div>
+    <div class="online-count"><span class="online-dot"></span><span id="onlineCount">—</span> testers online</div>
+    <div class="nav-buttons">
+      <button id="memberBtn">Member</button>
+      <button id="adminBtn">Admin</button>
+    </div>
   </div>
 </header>
 
 <section class="hero">
-  <div class="eyebrow">MINECRAFT • SPEAR PVP</div>
-  <h1>Spear Tier Rankings</h1>
-  <p>View the current spear PvP rankings, track tested players, and see who is climbing the leaderboard.</p>
-</section>
-
-<section class="stats">
-  <div class="stat-card">
-    <div class="num" id="statCount">0</div>
-    <div class="label">PLAYERS TESTED</div>
-  </div>
-  <div class="stat-card">
-    <div class="num" id="statHighest">—</div>
-    <div class="label">HIGHEST TIER</div>
-  </div>
-  <div class="stat-card">
-    <div class="num" id="statUpdated">—</div>
-    <div class="label">LAST UPDATED</div>
+  <div class="tag">MINECRAFT • SPEAR PVP TIER LIST</div>
+  <h1>The <span>SpearTier</span> Rankings</h1>
+  <p>Official community tier list for Minecraft spear PvP. Get tested, climb the leaderboard, and see where you rank against the best.</p>
+  <div class="hero-buttons">
+    <button class="btn btn-primary" onclick="document.getElementById('rankingsSection').scrollIntoView({behavior:'smooth'})">View Rankings</button>
+    <button class="btn btn-secondary" onclick="document.getElementById('stepsSection').scrollIntoView({behavior:'smooth'})">Get Tier Tested</button>
   </div>
 </section>
 
-<div class="main-panel">
-  <div class="main-panel-header">
-    <div>
-      <h2>Player Rankings</h2>
-      <p>Official spear testing list</p>
+<div class="discord-banner">
+  <div class="discord-inner">
+    <div class="discord-left">
+      <div class="discord-icon">
+        <svg viewBox="0 0 24 24"><path d="M20.317 4.369a19.791 19.791 0 0 0-4.885-1.515.074.074 0 0 0-.079.037c-.21.375-.444.864-.608 1.25a18.27 18.27 0 0 0-5.487 0 12.64 12.64 0 0 0-.617-1.25.077.077 0 0 0-.079-.037A19.736 19.736 0 0 0 3.677 4.37a.07.07 0 0 0-.032.027C.533 9.046-.32 13.58.099 18.057a.082.082 0 0 0 .031.056 19.9 19.9 0 0 0 5.993 3.03.078.078 0 0 0 .084-.028c.462-.63.874-1.295 1.226-1.994a.076.076 0 0 0-.041-.106 13.107 13.107 0 0 1-1.872-.892.077.077 0 0 1-.008-.128c.126-.094.252-.192.372-.291a.074.074 0 0 1 .078-.01c3.927 1.793 8.18 1.793 12.061 0a.073.073 0 0 1 .079.009c.12.099.246.198.373.292a.077.077 0 0 1-.006.128 12.3 12.3 0 0 1-1.873.891.076.076 0 0 0-.04.107c.36.698.772 1.362 1.225 1.993a.076.076 0 0 0 .084.028 19.839 19.839 0 0 0 6.002-3.03.077.077 0 0 0 .032-.054c.5-5.177-.838-9.673-3.549-13.66a.061.061 0 0 0-.031-.028zM8.02 15.33c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.094 2.157 2.418 0 1.334-.955 2.419-2.157 2.419zm7.975 0c-1.183 0-2.157-1.085-2.157-2.419 0-1.333.955-2.418 2.157-2.418 1.21 0 2.176 1.094 2.157 2.418 0 1.334-.946 2.419-2.157 2.419z"/></svg>
+      </div>
+      <div class="discord-text">
+        <strong>Join the SpearTier Discord</strong>
+        <span>Get tested, chat with the community, see results first.</span>
+      </div>
     </div>
-    <div id="viewBadge" class="badge">PUBLIC VIEW</div>
-  </div>
-
-  <div id="adminAdd" class="admin-add">
-    <input type="text" id="newName" placeholder="Player name">
-    <select id="newTier">
-      <option>HT1</option><option>LT1</option>
-      <option>HT2</option><option>LT2</option>
-      <option>HT3</option><option>LT3</option>
-      <option>HT4</option><option>LT4</option>
-      <option selected>HT5</option><option>LT5</option>
-    </select>
-    <input type="text" id="newRegion" placeholder="Region (e.g. NA)" style="width:100px;">
-    <button id="addPlayerBtn">Add Player</button>
-  </div>
-
-  <div class="controls">
-    <input type="text" id="search" placeholder="Search player...">
-    <select id="tierFilter">
-      <option value="">All tiers</option>
-      <option>HT1</option><option>LT1</option>
-      <option>HT2</option><option>LT2</option>
-      <option>HT3</option><option>LT3</option>
-      <option>HT4</option><option>LT4</option>
-      <option>HT5</option><option>LT5</option>
-    </select>
-  </div>
-
-  <table>
-    <thead>
-      <tr>
-        <th>#</th>
-        <th>PLAYER</th>
-        <th>TIER</th>
-        <th>REGION</th>
-        <th>TESTED</th>
-        <th></th>
-      </tr>
-    </thead>
-    <tbody id="rankingsBody"></tbody>
-  </table>
-
-  <div id="memberNote" class="pending-note" style="display:none;">
-    Signed in as a member. You can browse the rankings, but only admins can add names to the official listing.
+    <a class="discord-join" href="https://discord.gg/9RUfWqY9mX" target="_blank" rel="noopener">Join Discord</a>
   </div>
 </div>
 
-<footer>SPEARTIER • COMMUNITY SPEAR PVP RANKINGS</footer>
+<div class="section">
+  <div class="stats-grid">
+    <div class="stat-card"><div class="num" id="statCount">0</div><div class="label">PLAYERS TESTED</div></div>
+    <div class="stat-card"><div class="num" id="statHighest">—</div><div class="label">HIGHEST TIER</div></div>
+    <div class="stat-card"><div class="num" id="statUpdated">—</div><div class="label">LAST UPDATED</div></div>
+  </div>
+</div>
+
+<div class="section" id="rankingsSection">
+  <div class="section-head">
+    <div class="eyebrow">LEADERBOARD</div>
+    <h2>Player Rankings</h2>
+    <p>Official spear testing list, ranked highest tier to lowest.</p>
+  </div>
+
+  <div class="board">
+    <div class="board-controls">
+      <div class="board-controls-left">
+        <input type="text" id="search" placeholder="Search player...">
+        <select id="tierFilter">
+          <option value="">All tiers</option>
+          <option>HT1</option><option>LT1</option>
+          <option>HT2</option><option>LT2</option>
+          <option>HT3</option><option>LT3</option>
+          <option>HT4</option><option>LT4</option>
+          <option>HT5</option><option>LT5</option>
+        </select>
+      </div>
+      <div id="viewBadge" class="view-badge">PUBLIC VIEW</div>
+    </div>
+
+    <div class="legend" id="legend"></div>
+
+    <div id="adminAdd" class="admin-add">
+      <input type="text" id="newName" placeholder="Player name">
+      <select id="newTier">
+        <option>HT1</option><option>LT1</option>
+        <option>HT2</option><option>LT2</option>
+        <option>HT3</option><option>LT3</option>
+        <option>HT4</option><option>LT4</option>
+        <option selected>HT5</option><option>LT5</option>
+      </select>
+      <input type="text" id="newRegion" placeholder="Region" style="width:90px;">
+      <button id="addPlayerBtn">Add Player</button>
+    </div>
+
+    <div id="rankingsBody"></div>
+
+    <div id="memberNote" class="pending-note" style="display:none;">
+      Signed in as a member. You can browse the rankings, but only admins can edit the official listing.
+    </div>
+  </div>
+</div>
+
+<div class="section" id="stepsSection">
+  <div class="section-head">
+    <div class="eyebrow">HOW IT WORKS</div>
+    <h2>Get Tier Tested</h2>
+    <p>Five steps to earn your spot on the leaderboard.</p>
+  </div>
+  <div class="steps">
+    <div class="step"><div class="step-num">01</div><div class="step-body"><strong>Join the Discord</strong><span>Hop into the SpearTier Discord server to get started.</span></div></div>
+    <div class="step"><div class="step-num">02</div><div class="step-body"><strong>Request a test</strong><span>Open a testing ticket and wait for a tester to pick it up.</span></div></div>
+    <div class="step"><div class="step-num">03</div><div class="step-body"><strong>Play your match</strong><span>Face off against a tester in a 1v1 spear PvP duel.</span></div></div>
+    <div class="step"><div class="step-num">04</div><div class="step-body"><strong>Get your tier</strong><span>The tester assigns your tier based on performance.</span></div></div>
+    <div class="step"><div class="step-num">05</div><div class="step-body"><strong>Climb the board</strong><span>Retest anytime to improve your tier and ranking.</span></div></div>
+  </div>
+</div>
+
+<div class="section">
+  <div class="section-head">
+    <div class="eyebrow">REFERENCE</div>
+    <h2>Tiers &amp; Points</h2>
+    <p>How each tier breaks down.</p>
+  </div>
+  <div class="tier-ref" id="tierRef"></div>
+</div>
+
+<footer>
+  <div class="logo"><div class="logo-icon">⚔</div>SpearTier</div>
+  <div>Community spear PvP rankings for Minecraft.</div>
+  <div class="foot-links">
+    <a href="#rankingsSection">Rankings</a>
+    <a href="https://discord.gg/9RUfWqY9mX" target="_blank" rel="noopener">Discord</a>
+    <a href="#stepsSection">Get Tested</a>
+  </div>
+  <div>© 2026 SpearTier</div>
+  <div class="disclaimer">Not affiliated with Mojang or Microsoft.</div>
+</footer>
+
+<div class="tabbar">
+  <div class="tabbar-inner">
+    <a class="tab-item active" href="#"><span class="tab-icon">🏠</span>Home</a>
+    <a class="tab-item" href="#rankingsSection"><span class="tab-icon">🏆</span>Rankings</a>
+    <a class="tab-item" href="https://discord.gg/9RUfWqY9mX" target="_blank"><span class="tab-icon">💬</span>Discord</a>
+    <a class="tab-item" href="#stepsSection"><span class="tab-icon">📝</span>Get Tested</a>
+  </div>
+</div>
 
 <!-- Admin login modal -->
 <div class="overlay" id="adminOverlay">
@@ -407,7 +516,6 @@
   const ADMIN_PASSWORD = "ttaxro12";
   const STORAGE_KEY = "speartier_rankings";
 
-  // Seed with the one entry shown in the reference design
   const seed = [
     { name: "okwq", tier: "HT5", region: "NA", tested: "11/2/2026" }
   ];
@@ -420,29 +528,36 @@
     }
     try{ return JSON.parse(raw); }catch(e){ return [...seed]; }
   }
-  function savePlayers(list){
-    localStorage.setItem(STORAGE_KEY, JSON.stringify(list));
-  }
+  function savePlayers(list){ localStorage.setItem(STORAGE_KEY, JSON.stringify(list)); }
 
   let players = loadPlayers();
   let isAdmin = false;
   let memberName = null;
+  let activeLegendTier = "";
 
   const tierOrder = ["LT5","HT5","LT4","HT4","LT3","HT3","LT2","HT2","LT1","HT1"];
-
-  function tierRank(t){
-    const i = tierOrder.indexOf(t);
-    return i === -1 ? -1 : i;
+  function tierRank(t){ const i = tierOrder.indexOf(t); return i === -1 ? -1 : i; }
+  function sortedByTier(list){ return [...list].sort((a,b)=> tierRank(b.tier) - tierRank(a.tier)); }
+  function tierClass(t){
+    if(t === "HT1" || t === "LT1") return "t1";
+    if(t === "HT2" || t === "LT2") return "t2";
+    if(t === "HT3" || t === "LT3") return "t3";
+    return "";
+  }
+  function escapeHtml(str){
+    const div = document.createElement("div");
+    div.textContent = str;
+    return div.innerHTML;
+  }
+  function initials(name){
+    return name.slice(0,2).toUpperCase();
   }
 
   function renderStats(){
     document.getElementById("statCount").textContent = players.length;
-    let highest = "—";
-    let best = -1;
-    players.forEach(p=>{
-      const r = tierRank(p.tier);
-      if(r > best){ best = r; highest = p.tier; }
-    });
+    document.getElementById("onlineCount").textContent = Math.max(1, players.length);
+    let highest = "—", best = -1;
+    players.forEach(p=>{ const r = tierRank(p.tier); if(r > best){ best = r; highest = p.tier; } });
     document.getElementById("statHighest").textContent = highest;
     let latest = "—";
     players.forEach(p=>{
@@ -451,29 +566,54 @@
     document.getElementById("statUpdated").textContent = latest;
   }
 
+  function renderLegend(){
+    const legend = document.getElementById("legend");
+    legend.innerHTML = "";
+    tierOrder.forEach(t=>{
+      const pill = document.createElement("div");
+      pill.className = "legend-pill" + (activeLegendTier === t ? " active" : "");
+      pill.textContent = t;
+      pill.addEventListener("click", ()=>{
+        activeLegendTier = activeLegendTier === t ? "" : t;
+        document.getElementById("tierFilter").value = activeLegendTier;
+        renderAll();
+      });
+      legend.appendChild(pill);
+    });
+  }
+
   function renderTable(){
     const body = document.getElementById("rankingsBody");
     const search = document.getElementById("search").value.toLowerCase();
     const tierFilter = document.getElementById("tierFilter").value;
 
-    const filtered = players.filter(p=>{
+    const filtered = sortedByTier(players).filter(p=>{
       const matchesSearch = p.name.toLowerCase().includes(search);
       const matchesTier = !tierFilter || p.tier === tierFilter;
       return matchesSearch && matchesTier;
     });
 
     body.innerHTML = "";
+    if(filtered.length === 0){
+      body.innerHTML = `<div class="board-empty">No players match.</div>`;
+      return;
+    }
+
     filtered.forEach((p, idx)=>{
-      const tr = document.createElement("tr");
-      tr.innerHTML = `
-        <td>${idx+1}</td>
-        <td><strong>${escapeHtml(p.name)}</strong></td>
-        <td><span class="tier-pill">${p.tier}</span></td>
-        <td>${escapeHtml(p.region || "—")}</td>
-        <td>${escapeHtml(p.tested || "—")}</td>
-        <td class="admin-actions">${isAdmin ? `<button data-remove="${idx}">Remove</button>` : ""}</td>
+      const row = document.createElement("div");
+      row.className = "board-row";
+      const rankClass = idx === 0 ? "r1" : idx === 1 ? "r2" : idx === 2 ? "r3" : "";
+      const rankIcon = idx === 0 ? "👑" : (idx+1);
+      row.innerHTML = `
+        <div class="row-rank ${rankClass}">${rankIcon}</div>
+        <div class="avatar">${initials(p.name)}</div>
+        <div class="row-name"><strong>${escapeHtml(p.name)}</strong><span>Spear PvP</span></div>
+        <div class="row-tier ${tierClass(p.tier)}">${p.tier}</div>
+        <div class="row-region">${escapeHtml(p.region || "—")}</div>
+        <div class="row-date">${escapeHtml(p.tested || "—")}</div>
+        <div class="row-admin">${isAdmin ? `<button data-remove="${idx}">Remove</button>` : ""}</div>
       `;
-      body.appendChild(tr);
+      body.appendChild(row);
     });
 
     if(isAdmin){
@@ -489,14 +629,32 @@
     }
   }
 
-  function escapeHtml(str){
-    const div = document.createElement("div");
-    div.textContent = str;
-    return div.innerHTML;
+  function renderTierRef(){
+    const data = [
+      { name: "Tier 1", pills: [["HT1","300 pts"],["LT1","250 pts"]] },
+      { name: "Tier 2", pills: [["HT2","200 pts"],["LT2","160 pts"]] },
+      { name: "Tier 3", pills: [["HT3","120 pts"],["LT3","90 pts"]] },
+      { name: "Tier 4", pills: [["HT4","60 pts"],["LT4","35 pts"]] },
+      { name: "Tier 5", pills: [["HT5","15 pts"],["LT5","5 pts"]] },
+    ];
+    const wrap = document.getElementById("tierRef");
+    wrap.innerHTML = "";
+    data.forEach(t=>{
+      const row = document.createElement("div");
+      row.className = "tier-ref-row";
+      row.innerHTML = `
+        <div class="tier-ref-name">${t.name}</div>
+        <div class="tier-ref-pills">
+          ${t.pills.map(([label,pts])=>`<div class="tier-ref-pill">${label}<small>${pts}</small></div>`).join("")}
+        </div>
+      `;
+      wrap.appendChild(row);
+    });
   }
 
   function renderAll(){
     renderStats();
+    renderLegend();
     renderTable();
     const badge = document.getElementById("viewBadge");
     const adminAdd = document.getElementById("adminAdd");
@@ -520,25 +678,24 @@
     }
   }
 
-  // search / filter
   document.getElementById("search").addEventListener("input", renderTable);
-  document.getElementById("tierFilter").addEventListener("change", renderTable);
+  document.getElementById("tierFilter").addEventListener("change", ()=>{
+    activeLegendTier = document.getElementById("tierFilter").value;
+    renderLegend();
+    renderTable();
+  });
 
-  // admin modal
   const adminOverlay = document.getElementById("adminOverlay");
   document.getElementById("adminBtn").addEventListener("click", ()=>{
     document.getElementById("adminPassword").value = "";
     document.getElementById("adminError").textContent = "";
     adminOverlay.style.display = "flex";
   });
-  document.getElementById("adminCancel").addEventListener("click", ()=>{
-    adminOverlay.style.display = "none";
-  });
+  document.getElementById("adminCancel").addEventListener("click", ()=>{ adminOverlay.style.display = "none"; });
   document.getElementById("adminSubmit").addEventListener("click", ()=>{
     const val = document.getElementById("adminPassword").value;
     if(val === ADMIN_PASSWORD){
-      isAdmin = true;
-      memberName = null;
+      isAdmin = true; memberName = null;
       adminOverlay.style.display = "none";
       renderAll();
     } else {
@@ -549,24 +706,17 @@
     if(e.key === "Enter") document.getElementById("adminSubmit").click();
   });
 
-  // member modal
   const memberOverlay = document.getElementById("memberOverlay");
   document.getElementById("memberBtn").addEventListener("click", ()=>{
     document.getElementById("memberName").value = "";
     document.getElementById("memberError").textContent = "";
     memberOverlay.style.display = "flex";
   });
-  document.getElementById("memberCancel").addEventListener("click", ()=>{
-    memberOverlay.style.display = "none";
-  });
+  document.getElementById("memberCancel").addEventListener("click", ()=>{ memberOverlay.style.display = "none"; });
   document.getElementById("memberSubmit").addEventListener("click", ()=>{
     const val = document.getElementById("memberName").value.trim();
-    if(!val){
-      document.getElementById("memberError").textContent = "Enter a display name.";
-      return;
-    }
-    memberName = val;
-    isAdmin = false;
+    if(!val){ document.getElementById("memberError").textContent = "Enter a display name."; return; }
+    memberName = val; isAdmin = false;
     memberOverlay.style.display = "none";
     renderAll();
   });
@@ -574,7 +724,6 @@
     if(e.key === "Enter") document.getElementById("memberSubmit").click();
   });
 
-  // admin: add player
   document.getElementById("addPlayerBtn").addEventListener("click", ()=>{
     const name = document.getElementById("newName").value.trim();
     const tier = document.getElementById("newTier").value;
@@ -589,6 +738,7 @@
     renderAll();
   });
 
+  renderTierRef();
   renderAll();
 </script>
 
